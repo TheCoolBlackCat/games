@@ -1,10 +1,10 @@
 // List of Games
 var games = {
-  brickbreaker: ["Brick Breaker", "/📄/g/brickbreaker"],
-  pong: ["Pong!", "/📄/g/pong"],
-  rgb: ["The Great RGB Colour Game", "/📄/g/rgbcolours"],
-  racing: ["Racing", "/📄/g/racing"],
-  adventure: ["A Warrior's Adventure", "/📄/g/adventure"],
+  brickbreaker: ["Brick Breaker", "brickbreaker"],
+  pong: ["Pong!", "pong"],
+  rgb: ["The Great RGB Colour Game", "rgbcolours"],
+  racing: ["Racing", "racing"],
+  adventure: ["A Warrior's Adventure", "adventure"],
 };
 
 /*
