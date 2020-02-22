@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Games</title>
+    <!--START Favicon Embed - /tc 13/08/16-->
+      <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/🗂/favicon/tc/apple-touch-icon-57x57.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/🗂/favicon/tc/apple-touch-icon-114x114.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/🗂/favicon/tc/apple-touch-icon-72x72.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/🗂/favicon/tc/apple-touch-icon-144x144.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/🗂/favicon/tc/apple-touch-icon-60x60.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/🗂/favicon/tc/apple-touch-icon-120x120.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/🗂/favicon/tc/apple-touch-icon-76x76.png" />
+      <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/🗂/favicon/tc/apple-touch-icon-152x152.png" />
+      <link rel="icon" type="image/png" href="/🗂/favicon/tc/favicon-196x196.png" sizes="196x196" />
+      <link rel="icon" type="image/png" href="/🗂/favicon/tc/favicon-96x96.png" sizes="96x96" />
+      <link rel="icon" type="image/png" href="/🗂/favicon/tc/favicon-32x32.png" sizes="32x32" />
+      <link rel="icon" type="image/png" href="/🗂/favicon/tc/favicon-16x16.png" sizes="16x16" />
+      <link rel="icon" type="image/png" href="/🗂/favicon/tc/favicon-128.png" sizes="128x128" />
+      <meta name="application-name" content="&nbsp;"/>
+      <meta name="msapplication-TileColor" content="#FFFFFF" />
+      <meta name="msapplication-TileImage" content="/🗂/favicon/tc/mstile-144x144.png" />
+      <meta name="msapplication-square70x70logo" content="/🗂/favicon/tc/mstile-70x70.png" />
+      <meta name="msapplication-square150x150logo" content="/🗂/favicon/tc/mstile-150x150.png" />
+      <meta name="msapplication-wide310x150logo" content="/🗂/favicon/tc/mstile-310x150.png" />
+      <meta name="msapplication-square310x310logo" content="/🗂/favicon/tc/mstile-310x310.png" />
+    <!--END Favicon Embed-->
+    <style>
+    @import 'https://fonts.googleapis.com/css?family=Raleway:400,700';
+    @media screen and (min-device-width: 650px) {
+      #desktop {display: block;}
+      #mobile {display: none;}
+    }
+    @media screen and (max-device-width: 650px) {
+      #desktop {display: none;}
+      #mobile {display: block;}
+    }
+      html, body {
+        margin: 0;
+        padding: 0;
+
+        font-family: 'Raleway', Tahoma, sans-serif;
+        text-align: center;
+      }
+      ::-moz-selection { /* Code for Firefox */
+        color: white;
+        background: lightskyblue;
+      }
+      ::selection {
+        color: white;
+        background: lightskyblue;
+      }
+      #desktop {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #desktop h1{
+        font-size: 20pt;
+        margin-bottom: 6px;
+      }
+      #desktop li, span{
+        font-size: 15pt;
+      }
+      #mobile {
+        font-size: 30pt;
+      }
+      #mobile li {
+        font-size: 20pt;
+        border: 10px;
+      }
+      h1 {
+        color: skyblue;
+        margin: 10px;
+      }
+      a {
+        color: skyblue;
+        text-decoration: none;
+      }
+      menu {
+        padding: inherit;
+        margin: 10px;
+
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none;   /* Chrome/Safari/Opera */
+        -khtml-user-select: none;    /* Konqueror */
+        -moz-user-select: none;      /* Firefox */
+        -ms-user-select: none;       /* Internet Explorer/Edge */
+        user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+      li {
+        display: block;
+        margin: inherit;
+        padding: inherit;
+      }
+      li a {
+        margin-bottom: 5px;
+        padding: 5px;
+        display: block;
+        color: skyblue;
+        background-color: white;
+        border: 1px solid skyblue;
+        text-decoration: none;
+        transition-duration: 1s;
+        -webkit-transition-duration: 1s;
+      }
+      span {
+        cursor: pointer;
+
+        display: block;
+        margin: inherit;
+        padding: inherit;
+
+        color: white;
+        background-color: skyblue;
+
+        margin-bottom: 5px;
+        padding: 5px;
+        display: block;
+        border: 1px solid skyblue;
+        text-decoration: none;
+        transition-duration: 1s;
+        -webkit-transition-duration: 1s;
+      }
+      span:hover {
+        color: skyblue;
+        background-color: white;
+      }
+      li a:hover {
+        color: white;
+        background-color: skyblue;
+      }
+      #retro {display: none;}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#retroHead").click(function(){
+          $("#retro").toggle();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="desktop">
+      <h1><a href="/">Games</a></h1>
+      <menu>
+        <ul>
+          <li><span id="retroHead">Retro</span>
+            <ul id="retro">
+              <li><a href="retro/pong/game.html">Pong!</a></li>
+            </ul>
+          </li>
+        </ul>
+      </menu>
+    </div>
+    <div id="mobile">
+      <h1><a href="/">Games</a></h1>
+      <menu>
+        <ul>
+          <li><span id="retroHead">Retro</span>
+            <ul id="retro">
+              <li><a href="retro/pong/game.html">Pong!</a></li>
+            </ul>
+          </li>
+        </ul>
+      </menu>
+    </div>
+  </body>
+</html>

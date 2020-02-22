@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pong</title>
+    <meta charset="UTF-8" />
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="favicomatic/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="favicomatic/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="favicomatic/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="favicomatic/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="favicomatic/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="favicomatic/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="favicomatic/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="favicomatic/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="favicomatic/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="favicomatic/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="favicomatic/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="favicomatic/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="favicomatic/mstile-310x310.png" />
+    <style>
+	    @import 'https://fonts.googleapis.com/css?family=Reem+Kufi';
+
+	    html, body{
+		    margin: 0px;
+		    padding: 0px;
+
+        /*START Disallow Selection*/
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none;   /* Chrome/Safari/Opera */
+        -khtml-user-select: none;    /* Konqueror */
+        -moz-user-select: none;      /* Firefox */
+        -ms-user-select: none;       /* Internet Explorer/Edge */
+        user-select: none;           /* Non-prefixed version, currently
+                                    not supported by any browser */
+        /*END Disallow Selection*/
+	    }
+	    body{
+		    text-align: center;
+	    }
+	    canvas{
+		    display: none;
+	    }
+	    #intro{
+		    margin: 0px;
+		    padding: 0px;
+
+		    position: relative;
+		    top: 200px;
+	    }
+	    a{
+		    padding: 3px;
+
+		    font-family: 'Reem Kufi', sans-serif;
+		    font-size: 36pt;
+		    color: white;
+		    background-color: skyblue;
+		    border: 1px solid skyblue;
+
+		    -webkit-transition-duration: 1s; /* Safari */
+			transition-duration: 1s;
+
+      cursor: pointer;
+	    }
+	    a:hover{
+		    color: skyblue;
+		    background-color: white;
+	    }
+	    h1{
+		    margin-top: 5px;
+		    padding: 0px;
+		    font-family: 'Reem Kufi', sans-serif;
+		    font-size: 18pt;
+		    color: skyblue;
+
+        cursor: pointer;
+	    }
+	    h2{
+		    margin: 0px;
+        margin-top: 10px;
+		    padding: 0px;
+		    font-family: 'Reem Kufi', sans-serif;
+		    font-size: 10pt;
+		    color: lightskyblue;
+		    line-height: normal;
+	    }
+	    form{
+        display: none;
+	    }
+	</style>
+	<!--START jQuery to show canvas and hide button-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<script>
+			$(document).ready(function(){
+			    $("a").click(function(){
+			        $("canvas").show();
+			        $("#intro").hide();
+			    });
+			});
+      $(document).ready(function(){
+			    $("h1").click(function(){
+			        $("form").toggle();
+			    });
+			});
+	</script>
+	<!--END jQuery to show canvas and hide button-->
+  <script>
+  var LEFT_PADDLE_COLOUR = 'white';  //default LEFT_PADDLE_COLOUR
+  var RIGHT_PADDLE_COLOUR = 'white';  //default RIGHT_PADDLE_COLOUR
+  var BALL_COLOUR = 'white';    //default BALL_COLOUR
+  var BG_COLOUR = 'black'; //default BG_COLOUR
+  function opt() {
+    var bc = document.getElementById("ballColour");
+    BALL_COLOUR = bc.options[ bc.selectedIndex ].value;
+
+    var lpc = document.getElementById("leftPaddleColour");
+    LEFT_PADDLE_COLOUR = lpc.options[ lpc.selectedIndex ].value;
+
+    var rpc = document.getElementById("rightPaddleColour");
+    RIGHT_PADDLE_COLOUR = rpc.options[ rpc.selectedIndex ].value;
+
+    var bgc = document.getElementById("bgColour");
+    BG_COLOUR = bgc.options[ bgc.selectedIndex ].value;
+  }
+  </script>
+  </head>
+  <body>
+	  <div id="intro">
+		  <a onclick="opt()">Play!</a><br />
+      <!--START Options-->
+		  <h1>Options</h1>
+		  <form method="post">
+			  <!--START ballColour-->
+			  <label><h2>Ball Colour</h2></label>
+        <!--
+			  <select id="ballColour">
+				  <option value="#FFF">White</option>
+				  <option value="yellow">Yellow</option>
+          <option value="blue">Dark Blue</option>
+          <option value="skyblue">Sky Blue</option>
+          <option value="green">Green</option>
+          <option value="red">Red</option>
+          <option value="#3EB489">Mint</option>
+			  </select>
+      -->
+        <select id="ballColour">
+          <option value="#FFFFFF">White</option>
+          <option value="#000000">Black</option>
+          <option value="#F44336">Red</option>
+          <option value="#E91E63">Pink</option>
+          <option value="#9C27B0">Purple</option>
+          <option value="#673AB7">Deep Purple</option>
+          <option value="#3F51B5">Indigo</option>
+          <option value="#2196F3">Blue</option>
+          <option value="#03A9F4">Light Blue</option>
+          <option value="#00BCD4">Cyan</option>
+          <option value="#009688">Teal</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#8BC34A">Light Green</option>
+          <option value="#CDDC39">Lime</option>
+          <option value="#FFEB3B">Yellow</option>
+          <option value="#FFC107">Amber</option>
+          <option value="#FF9800">Orange</option>
+          <option value="#FF5722">Deep Orange</option>
+          <option value="#795548">Brown</option>
+          <option value="#9E9E9E">Grey</option>
+          <option value="#607D8B">Blue Grey</option>
+          <!--<option value="#3EB489">Mint</option>-->
+        </select>
+			  <!--END ballColour-->
+        <!--START LEFTpaddleColour-->
+        <label><h2>Left Paddle Colour</h2></label>
+        <select id="leftPaddleColour">
+          <option value="#FFFFFF">White</option>
+          <option value="#000000">Black</option>
+          <option value="#F44336">Red</option>
+          <option value="#E91E63">Pink</option>
+          <option value="#9C27B0">Purple</option>
+          <option value="#673AB7">Deep Purple</option>
+          <option value="#3F51B5">Indigo</option>
+          <option value="#2196F3">Blue</option>
+          <option value="#03A9F4">Light Blue</option>
+          <option value="#00BCD4">Cyan</option>
+          <option value="#009688">Teal</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#8BC34A">Light Green</option>
+          <option value="#CDDC39">Lime</option>
+          <option value="#FFEB3B">Yellow</option>
+          <option value="#FFC107">Amber</option>
+          <option value="#FF9800">Orange</option>
+          <option value="#FF5722">Deep Orange</option>
+          <option value="#795548">Brown</option>
+          <option value="#9E9E9E">Grey</option>
+          <option value="#607D8B">Blue Grey</option>
+          <!--<option value="#3EB489">Mint</option>-->
+        </select>
+        <!--END LEFTpaddleColour-->
+        <!--START RIGHTpaddleColour-->
+        <label><h2>Right Paddle Colour</h2></label>
+        <select id="rightPaddleColour">
+          <option value="#FFFFFF">White</option>
+          <option value="#000000">Black</option>
+          <option value="#F44336">Red</option>
+          <option value="#E91E63">Pink</option>
+          <option value="#9C27B0">Purple</option>
+          <option value="#673AB7">Deep Purple</option>
+          <option value="#3F51B5">Indigo</option>
+          <option value="#2196F3">Blue</option>
+          <option value="#03A9F4">Light Blue</option>
+          <option value="#00BCD4">Cyan</option>
+          <option value="#009688">Teal</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#8BC34A">Light Green</option>
+          <option value="#CDDC39">Lime</option>
+          <option value="#FFEB3B">Yellow</option>
+          <option value="#FFC107">Amber</option>
+          <option value="#FF9800">Orange</option>
+          <option value="#FF5722">Deep Orange</option>
+          <option value="#795548">Brown</option>
+          <option value="#9E9E9E">Grey</option>
+          <option value="#607D8B">Blue Grey</option>
+          <!--<option value="#3EB489">Mint</option>-->
+        </select>
+        <!--END RIGHTpaddleColour-->
+        <!--START BGColour-->
+        <label><h2>Background Colour</h2></label>
+        <select id="bgColour">
+          <option value="#000000">Black</option>
+          <option value="#FFFFFF">White</option>
+          <option value="#F44336">Red</option>
+          <option value="#E91E63">Pink</option>
+          <option value="#9C27B0">Purple</option>
+          <option value="#673AB7">Deep Purple</option>
+          <option value="#3F51B5">Indigo</option>
+          <option value="#2196F3">Blue</option>
+          <option value="#03A9F4">Light Blue</option>
+          <option value="#00BCD4">Cyan</option>
+          <option value="#009688">Teal</option>
+          <option value="#4CAF50">Green</option>
+          <option value="#8BC34A">Light Green</option>
+          <option value="#CDDC39">Lime</option>
+          <option value="#FFEB3B">Yellow</option>
+          <option value="#FFC107">Amber</option>
+          <option value="#FF9800">Orange</option>
+          <option value="#FF5722">Deep Orange</option>
+          <option value="#795548">Brown</option>
+          <option value="#9E9E9E">Grey</option>
+          <option value="#607D8B">Blue Grey</option>
+          <!--<option value="#3EB489">Mint</option>-->
+        </select>
+        <!--END BGColour-->
+		  </form>
+      <!--END Options-->
+	  </div>
+    <canvas id="gameCanvas" width="800" height="600" autofocus></canvas>
+
+    <script>
+      var canvas;
+      var canvasContext;
+      var ballX = 50;
+      var ballY = 50;
+      var ballSpeedX = 10;
+      var ballSpeedY = 4;
+
+      var player1Score = 0;
+      var player2Score = 0;
+      const WINNING_SCORE = 3;
+
+      var showingWinScreen = false;
+
+      var paddle1Y = 250;
+      var paddle2Y = 250;
+      const PADDLE_THICKNESS = 10;
+      const PADDLE_HEIGHT = 100;
+
+      function calculateMousePos(evt) {
+        var rect = canvas.getBoundingClientRect(); //Bound STUFF
+        var root = document.documentElement; //Get document game.html
+        var mouseX = evt.clientX - rect.left - root.scrollLeft; //Ignore positioning of canvas in window, get X position within canvas
+        var mouseY = evt.clientY - rect.top - root.scrollTop; //Ignore positioning of canvas in window, get Y position within canvas
+        return { //Returns adjusted X and Y mouse coordinates
+          x: mouseX,
+          y:mouseY
+        }
+      }
+
+      function handleMouseClick(evt) {
+        if(showingWinScreen){
+          player1Score = 0;
+          player2Score = 0;
+          showingWinScreen = false;
+        }
+      }
+
+      window.onload = function() {
+        canvas = document.getElementById('gameCanvas');
+        canvasContext = canvas.getContext('2d');
+
+        var framesPerSecond = 30;
+        setInterval(function (){ //Re-Call the functions at a number of FPS
+                moveEverything();
+                drawEverything();
+        }, 1000/framesPerSecond);
+
+        canvas.addEventListener('mousedown', handleMouseClick);
+
+        canvas.addEventListener('mousemove', //Adds EventListener for mouse movement
+                function (evt) { //Calls function for mousePos
+                    var mousePos = calculateMousePos(evt); // ″
+                    paddle1Y = mousePos.y - (PADDLE_HEIGHT/2); //Sets paddle1 Y position to that of mouse
+                });
+      }
+
+      function ballReset() {
+        if(player1Score >= WINNING_SCORE || //or else
+            player2Score >= WINNING_SCORE){
+              showingWinScreen = true;
+            }
+
+        ballSpeedX = -ballSpeedX; //Reverse direction
+        ballX = canvas.width/2;   //Move ball to middle
+        ballY = canvas.height/2;  // ″
+      }
+
+      function computerMovement() {
+        var paddle2YCentre = paddle2Y + (PADDLE_HEIGHT/2);
+        if(paddle2YCentre < ballY - 35) {
+          paddle2Y += 6;
+        } else if(paddle2YCentre > ballY + 35) {
+          paddle2Y -= 6;
+        }
+      }
+
+      // +=, -=, *= & /= Operate on the variable, then store the result inside it
+
+      function moveEverything() {
+        if (showingWinScreen) { //asks if showingWinScreen == true
+          return; //bails out of function prematurely
+        }
+        computerMovement();
+
+        ballX += ballSpeedX; //Move ballX by ballSpeedX
+        //See above for about operator +=
+        //ballSpeedX = ballSpeedX + 1; Causes acceleration, unwanted
+        ballY += ballSpeedY; //Move ballY by ballSpeedY
+
+        if (ballX < 0){ //IF ball touches left side, reverse (bounce off)
+          if (ballY > paddle1Y && //and also
+            ballY < paddle1Y+PADDLE_HEIGHT) {
+            ballSpeedX = -ballSpeedX;
+
+            var deltaY = ballY - (paddle1Y+PADDLE_HEIGHT/2); //Left Ball control
+              ballSpeedY = deltaY * 0.35;
+          } else {
+            player2Score ++; //must be BEFORE ballReset
+            ballReset();
+
+          }
+        }
+
+        // ++ does += 1, -- does -= 1
+
+        if (ballX > canvas.width) { //IF ball touches right side, reverse (bounce off)
+          if (ballY > paddle2Y && //and also
+            ballY < paddle2Y+PADDLE_HEIGHT) {
+            ballSpeedX = -ballSpeedX;
+            var deltaY = ballY - (paddle2Y+PADDLE_HEIGHT/2);  //Right Ball control
+              ballSpeedY = deltaY * 0.35;
+          } else {
+            player1Score ++;  //must be BEFORE ballReset
+            ballReset();
+
+          }
+        }
+
+        if (ballY < 0){ //IF ball touches left side, reverse (bounce off)
+          ballSpeedY = -ballSpeedY;
+        }
+        if (ballY > canvas.height){ //IF ball touches right side, reverse (bounce off)
+          ballSpeedY = -ballSpeedY;
+        }
+      }
+
+      function drawNet() {
+        for (var i=0; i<canvas.height; i+=40){ //FOR LOOP
+          colorRect (canvas.width/2-1,i, 2, 20,'white'); //
+        }
+      }
+
+      function drawEverything() {
+        colorRect (0,0, canvas.width, canvas.height,BG_COLOUR); //black background
+
+
+        if (showingWinScreen) { //asks if showingWinScreen == true
+          canvasContext.fillStyle = 'white';
+
+          if(player1Score >= WINNING_SCORE){
+            canvasContext.fillText("You Won :)", 350, 200);
+
+          } else if (player2Score >= WINNING_SCORE) {
+            canvasContext.fillText("You Lost :(", 350, 200);
+          }
+
+          canvasContext.fillText("Click to continue", 350, 500);
+          return; //bails out of function prematurely
+        }
+
+        drawNet(); //calls drawNet
+
+        colorRect (0, paddle1Y, PADDLE_THICKNESS, PADDLE_HEIGHT, LEFT_PADDLE_COLOUR); // left player paddle
+
+        colorRect (canvas.width-PADDLE_THICKNESS , paddle2Y, PADDLE_THICKNESS, PADDLE_HEIGHT, RIGHT_PADDLE_COLOUR); // right computer paddle
+        //colorRect (ballX, 100, 10, 10,'red'); draws (square) ball, unwanted
+        console.log(BALL_COLOUR);
+        colorCircle(ballX, ballY, 10, BALL_COLOUR);
+
+		//SCORES
+		canvasContext.fillStyle = 'white';
+        canvasContext.fillText(player1Score, 100, 100);
+        canvasContext.fillText(player2Score, canvas.width-100, 100);
+      }
+
+      function colorCircle(centreX, centreY, radius, drawColor) { //Function to draw Circle
+        canvasContext.fillStyle = drawColor;
+        canvasContext.beginPath();
+        canvasContext.arc(centreX, centreY, radius, 0/*Startpoint is 0 radians*/, Math.PI*2 /*Endpoint is 2π radians*/ , true /*Draws counterclockwise arc*/);
+        canvasContext.fill();
+      }
+
+      function colorRect (leftX, topY, width, height, drawColor){ //Function to draw Rectangle
+        canvasContext.fillStyle = drawColor;
+        canvasContext.fillRect (leftX, topY, width, height);
+      }
+
+    </script>
+  </body>
+</html>
