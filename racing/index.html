@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="UTF-8" http-equiv="encoding" />
+    <style>
+      body {
+        font-family: Verdana, sans-serif;
+        text-align: center;
+      }
+      a{
+        padding: 5px 10px 0 10px;
+		    font-size: 36pt;
+		    color: white;
+		    background-color: green;
+		    border: 1px solid green;
+        border-radius: 5px;
+		    -webkit-transition-duration: 1s; transition-duration: 1s;
+        cursor: pointer;
+
+        position: relative;
+		    top: 200px;
+	    }
+	    a:hover{
+		    color: green;
+		    background-color: rgba(255, 255, 255, 0);
+	    }
+    </style>
+  </head>
+  <body>
+    <div id="game">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+      <div id="textLog" style="font-weight: bold;"></div>
+      <p>Use the WASD keys to drive the blue car</p>
+      <p>Use the Up, Down, Left and Right arrow keys to drive the green car</p>
+    </div>
+    
+    <!-- START show canvas -->
+    <a>Play!</a>
+    <script>
+      !function() {
+        var btn = document.getElementsByTagName("a")[0];
+        var game = document.getElementById("game");
+        game.style.display = "none";
+        btn.addEventListener("click", function(){game.style.display = "block"; btn.style.display = "none"});
+      }();
+    </script>
+    <!-- END show canvas -->
+    
+    <script type="text/javascript" src="js/GraphicsCommon.js"></script>
+    <script type="text/javascript" src="js/ImageLoading.js"></script>
+    <script type="text/javascript" src="js/Car.js"></script>
+    <script type="text/javascript" src="js/Track.js"></script>
+    <script type="text/javascript" src="js/Input.js"></script>
+    <script type="text/javascript" src="js/Main.js"></script>
+  </body>
+</html>

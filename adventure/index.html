@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="UTF-8" http-equiv="encoding" />
+    <style>
+      body {
+        font-family: Verdana, sans-serif;
+        text-align: center;
+      }
+      a{
+        padding: 5px 10px 0 10px;
+		    font-size: 36pt;
+		    color: white;
+		    background-color: darkorange;
+		    border: 1px solid darkorange;
+        border-radius: 5px;
+		    -webkit-transition-duration: 1s; transition-duration: 1s;
+        cursor: pointer;
+
+        position: relative;
+		    top: 200px;
+	    }
+	    a:hover{
+		    color: darkorange;
+		    background-color: rgba(255, 255, 255, 0);
+	    }
+    </style>
+  </head>
+  <body>
+    <div id="game">
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+      <p>Use the WASD keys to move</p>
+      <div id="textLog">
+        <form id="nameForm">
+          Your name is: <input type="text" placeholder="Warrior" value="Warrior" id="nameField">
+          <button type="button" onClick="setName()">OK</button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- START show canvas -->
+    <a>Play!</a>
+    <script>
+      !function() {
+        var btn = document.getElementsByTagName("a")[0];
+        var game = document.getElementById("game");
+        game.style.display = "none";
+        btn.addEventListener("click", function(){game.style.display = "block"; btn.style.display = "none"});
+      }();
+    </script>
+    <!-- END show canvas -->
+
+    <script src="js/GraphicsCommon.js"></script>
+    <script src="js/ImageLoading.js"></script>
+    <script src="js/Warrior.js"></script>
+    <script src="js/World.js"></script>
+    <script src="js/Input.js"></script>
+    <script src="js/Main.js"></script>
+  </body>
+</html>

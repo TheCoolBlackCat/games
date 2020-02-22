@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type" />
+    <meta content="UTF-8" http-equiv="encoding" />
+    <title>Brick Breaker</title>
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="favicomatic/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="favicomatic/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="favicomatic/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="favicomatic/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="favicomatic/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="favicomatic/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="favicomatic/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="favicomatic/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="favicomatic/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="favicomatic/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="favicomatic/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="favicomatic/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="favicomatic/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="favicomatic/mstile-310x310.png" />
+
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css?family=Ravi+Prakash');
+
+      html, body{
+        margin: 0px; padding: 0px;
+        /*Disallow Selection*/ -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+      }
+      body{text-align: center;}
+      #container {margin-top: 1%; text-align: center;}
+      canvas {display: none;}
+      a{
+        padding: 5px 10px 0 10px;
+		    font-family: 'Ravi Prakash', cursive;
+		    font-size: 36pt;
+		    color: white;
+		    background-color: blue;
+		    border: 1px solid blue;
+        border-radius: 5px;
+		    -webkit-transition-duration: 1s; transition-duration: 1s;
+        cursor: pointer;
+
+        position: relative;
+		    top: 200px;
+	    }
+	    a:hover{
+		    color: blue;
+		    background-color: rgba(255, 255, 255, 0);
+	    }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  	<script>$(document).ready(function(){$("a").click(function(){$("canvas").show();$("a").hide();});});</script>
+  </head>
+  <body>
+    <div id="container">
+      <a>Play!</a>
+
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+    </div>
+
+    <script>
+// Initialisation of Key Variables
+
+var ballX = 75;
+var ballY = 75;
+var ballSpeedX = 5;
+var ballSpeedY = 7;
+
+const BRICK_W = 80;
+const BRICK_H = 20;
+const BRICK_GAP = 2;
+const BRICK_COLS = 10;
+const BRICK_ROWS = 14;
+var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
+var bricksLeft = 0;
+
+const PADDLE_WIDTH = 100;
+const PADDLE_THICKNESS = 10;
+const PADDLE_DIST_FROM_EDGE = 60;
+var paddleX = 400;
+
+var canvas, canvasContext;
+
+var mouseX = 0;
+var mouseY = 0;
+
+function updateMousePos(evt) {  // Mouse Stuff
+  var rect = canvas.getBoundingClientRect();
+  var root = document.documentElement;
+
+  mouseX = evt.clientX - rect.left - root.scrollLeft;
+  mouseY = evt.clientY - rect.top - root.scrollTop;
+
+  paddleX = mouseX-PADDLE_WIDTH/2;
+
+  // Start Cheat/Hack to move ball - For Testing
+    /*
+    ballX = mouseX;
+    ballY = mouseY;
+    ballSpeedX = 4;
+    ballSpeedY = -4;
+    */
+  // End Cheat/Hack
+}
+
+function brickReset() { // Draw Brick Grid
+  bricksLeft = 0;
+  var i; // Declares i for both for loops
+  for (i=0; i<3*BRICK_COLS; i++) { // First 3 rows, draw space
+    brickGrid[i] = false;
+  }
+  for (;i<BRICK_COLS*BRICK_ROWS; i++) { // After first 3 rows, draw brick grid (First ; is intentional)
+      brickGrid[i] = true;
+      bricksLeft++;
+  } //end of for each brick
+} //end of brickReset()
+
+window.onload = function() { // onload functions - canvasContext, FPS + Mouse Event Listener
+  canvas = document.getElementById('gameCanvas');
+  canvasContext = canvas.getContext('2d');
+
+  var framesPerSecond = 30;
+  setInterval (updateAll, 1000/framesPerSecond);
+
+  canvas.addEventListener('mousemove', updateMousePos);
+
+  brickReset();
+  ballReset();
+}
+
+function updateAll() { // Calls moveAll + drawAll
+  moveAll();
+  drawAll();
+}
+
+function ballReset() { // Resets ball to centre at start
+  ballX = canvas.width/2;
+  ballY = canvas.height/2;
+}
+
+function ballMove() { // Ball movement code
+  ballX += ballSpeedX;
+  ballY += ballSpeedY;
+
+  // After The && is to fix Ball Stuck at Side bug when paddle interferes
+  // Only flips speed if it isn't moving back onto playfield
+  if (ballX < 0 && ballSpeedX < 0.0) { //bounce off left edge of canvas
+    ballSpeedX *= -1;
+  }
+  if (ballX > canvas.width && ballSpeedX > 0.0) { // bounce off right edge of canvas
+    ballSpeedX *= -1;
+  }
+
+  if (ballY < 0 && ballSpeedY < 0.0) { // bounce off top of canvas
+    ballSpeedY *= -1;
+  }
+  // No && condition, not needed as ball resets at bottom
+  if (ballY > canvas.height) { // bounce off bottom of canvas
+    ballReset();
+    brickReset();
+    // ballSpeedY *= -1;
+  } //end if
+} //end ballMove()
+
+function isBrickAtColRow(col,row) { // Is position in outer bounds, if so, return false?
+  if (col >= 0 && col < BRICK_COLS && // Checks for illegal columns
+    row >= 0 && row < BRICK_ROWS) { // Checks for illegal rows
+      var brickIndexUnderCoord = rowColToArrayIndex(col, row);
+      return brickGrid[brickIndexUnderCoord];
+    } else {
+      return false; // Sets boolean value to 'false'
+    }
+}
+
+function ballBrickHandling() {
+  // Where is the ball?
+  var ballBrickCol = Math.floor(ballX / BRICK_W);
+  var ballBrickRow = Math.floor(ballY / BRICK_H);
+  var brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
+
+  /*colorText(mouseBrickCol+","+mouseBrickRow+": "+brickIndexUnderMouse,
+            mouseX,mouseY, 'yellow');*/
+
+  if (ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && //Fixes Edge-Wrap Collision Bug
+    ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS) {
+
+      if(isBrickAtColRow(ballBrickCol, ballBrickRow)){ // Brick under ball removed
+        brickGrid[brickIndexUnderBall] = false;
+        bricksLeft--;
+        //console.log(bricksLeft);
+
+      var prevBallX = ballX - ballSpeedX;
+      var prevBallY = ballY - ballSpeedY;
+      var prevBrickCol = Math.floor(prevBallX / BRICK_W);
+      var prevBrickRow = Math.floor(prevBallY / BRICK_H);
+
+
+      var bothTestsFailed = true; // 'Armpit' Scenario Fix 1/2
+
+      if(prevBrickCol != ballBrickCol) {
+        if(isBrickAtColRow(prevBrickCol, ballBrickRow) == false) { // Bounce off sides of a column
+          ballSpeedX *= -1;
+          bothTestsFailed = false;
+      } //end if(brickGrid
+    } //end if(prevBrickCol
+
+      if(prevBrickRow != ballBrickRow) { // Bounce off bottom of a row
+        if(isBrickAtColRow(prevBrickCol, ballBrickRow) == false) {
+          ballSpeedY *= -1;
+          bothTestsFailed = false;
+        } // end if(brickGrid
+      } //end if(prevBrickRow
+
+        if (bothTestsFailed) {  // 'Armpit' Scenario Fix 2/2 (Prevents ball from going through)
+          ballSpeedX *= -1;
+          ballSpeedY *= -1;
+        }
+
+    } //end LILif
+  } //end BIGif
+} //end ballBrickHandling()
+
+function ballPaddleHandling() {
+  var paddleTopEdgeY = canvas.height-PADDLE_DIST_FROM_EDGE;
+  var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
+  var paddleLeftEdgeX = paddleX;
+  var paddleRightEdgeX = paddleLeftEdgeX + PADDLE_WIDTH;
+
+  if( ballY > paddleTopEdgeY && //below top of paddle
+      ballY < paddleBottomEdgeY && //above top of paddle
+      ballX > paddleLeftEdgeX && //right of the left side of paddle
+      ballX < paddleRightEdgeX) { //left of the right side of paddle
+
+        ballSpeedY *= -1;
+
+        var centerOfPaddleX = paddleX + PADDLE_WIDTH/2;
+        var ballDistFromPaddleCenterX = ballX - centerOfPaddleX;
+        ballSpeedX = ballDistFromPaddleCenterX * 0.35;
+
+        if(bricksLeft == 0) {
+          brickReset();
+        } // out of bricks, reset grid when paddle touched (avoids ball getting stuck in grid)
+      } // ball centre inside paddle
+} //end ballPaddleHandling
+
+function moveAll() {
+  ballMove();
+
+  ballBrickHandling();
+
+  ballPaddleHandling();
+}
+
+function rowColToArrayIndex(col, row) {
+  return col + BRICK_COLS * row;
+}
+
+function drawBricks() {
+
+  for(var eachRow=0;eachRow<BRICK_ROWS;eachRow++){
+
+  for (var eachCol=0;eachCol<BRICK_COLS;eachCol++) {
+
+    var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
+      if (brickGrid[arrayIndex]){
+        colorRect(BRICK_W*eachCol,BRICK_H*eachRow,
+                  BRICK_W-BRICK_GAP,BRICK_H-BRICK_GAP, 'blue');
+      } //end of is this brick here
+    } //end of for each brick
+  } //end of for eachRow
+} //end of drawBricks()
+
+function drawAll() {
+  colorRect (0,0, canvas.width,canvas.height, 'black');
+
+  colorCircle (ballX, ballY, 10, 'white');
+
+  colorRect(paddleX, canvas.height-PADDLE_DIST_FROM_EDGE, PADDLE_WIDTH,PADDLE_THICKNESS, 'white');
+
+  drawBricks();
+} //end drawAll
+
+function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
+  canvasContext.fillStyle = fillColor;
+  canvasContext.fillRect (topLeftX,topLeftY, boxWidth,boxHeight);
+}
+
+function colorCircle(centerX,centerY, radius, fillColor) {
+  canvasContext.fillStyle = fillColor;
+  canvasContext.beginPath();
+  canvasContext.arc(centerX,centerY,radius, 0, Math.PI*2, true);
+  canvasContext.fill();
+}
+
+function colorText(showWords, textX,textY, fillColor) {
+  canvasContext.fillStyle = fillColor;
+  canvasContext.fillText(showWords, textX,textY);
+}
+
+    </script>
+  </body>
+</html>

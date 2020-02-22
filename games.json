@@ -1,0 +1,24 @@
+// This file does nothing
+
+{
+	"brickbreaker": [
+		"Brick Breaker",
+		"/📄/g/brickbreaker"
+	],
+	"pong": [
+		"Pong!",
+		"/📄/g/pong"
+	],
+  "racing": [
+		"Racing",
+		"/📄/g/racing"
+	],
+  "adventure": [
+		"A Warrior's Adventure",
+		"/📄/g/adventure"
+	],
+	"rgb": [
+		"The Great RGB Colour Game",
+		"/📄/g/rgbcolours"
+	]
+}
